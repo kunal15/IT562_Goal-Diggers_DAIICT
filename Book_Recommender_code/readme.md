@@ -72,4 +72,4 @@ Press on submit button to proceed to next set of recommendations.
 
 ## Acknowledgments
 
-* Prof Sourish Dasgupta- To allow us to make this project
+* Prof Sourish Dasgupta- For his guidance

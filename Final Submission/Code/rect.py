@@ -1,6 +1,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from greedy_ucb import *
+from backend_code import *
 global num_ir
 
 

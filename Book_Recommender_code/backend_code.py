@@ -67,13 +67,11 @@ class random_choice(algo):
     def choice(self, user_features, books, epoch, s):
         return books.sample()
 
-def greedy_choice_t(user_features, books, epoch, s, recommf):
-    """ greedy with decreasing epsilon """
+def greedy_choice(user_features, books, epoch, s, recommf):
     epsilon = 1 / math.sqrt(epoch+1)
-    return greedy_choice_no_t(user_features, books, epoch, s, recommf, epsilon)
+    return greedy_choice_(user_features, books, epoch, s, recommf, epsilon)
 
-def greedy_choice_no_t(user_features, books, epoch, s, recommf, epsilon):
-    """ greedy with fixed epsilon """
+def greedy_choice_(user_features, books, epoch, s, recommf, epsilon):
     if random.random() > epsilon:
         return recommf(user_features, books, epoch, s)
     else:
@@ -83,22 +81,14 @@ def greedy_choice_no_t(user_features, books, epoch, s, recommf, epsilon):
         return m
     
 class greedy_choice_contentbased(algo):
-    def choice(self, user_features, books, epoch, s):
-        """ greedy approach to the problem """
-        return greedy_choice_t(user_features, books, epoch, s, content_based)
-
-class greedy_choice_no_t_contentbased(algo):
     def choice(self, user_features, books, epoch, s, epsilon=0.3):
-        """ greedy approach to the problem """
-        return greedy_choice_no_t(user_features, books, epoch, s, content_based, epsilon)
+        return greedy_choice_(user_features, books, epoch, s, content_based, epsilon)
     
 class greedy_choice_UCB(algo):
     def choice(self, user_features, books, epoch, s):
-        """ greedy approach with upper confidence bounds """
-        return greedy_choice_t(user_features, books, epoch, s, partial(content_based, UCB=True))
+        return greedy_choice(user_features, books, epoch, s, partial(content_based, UCB=True))
 
 def compute_similarity(user_features, book_features, epoch, s):
-    """ Compute similarity U based on user preferences and book preferences """
     res = user_features.dot(book_features) * (1 - math.exp(-epoch/s))
     return res
 
@@ -106,7 +96,6 @@ def compute_UCB(epoch, Nt):
     return math.sqrt((2 * math.log2(epoch + 1)) / (Nt * epoch))
 
 def get_book_features(book):
-    """ selected features from dataframe """
     if isinstance(book, pd.Series):
         return book[7:REDUCED_DIM+7]
     elif isinstance(book, pd.DataFrame):
@@ -114,16 +103,13 @@ def get_book_features(book):
     else:
         raise TypeError("{} should be a Series or DataFrame".format(book))
         
-def iterative_mean(old, new, t):
+def calc_mean(old, new, t):
     return ((t-1) / t) * old + (1/t) * new
     
 def update_features(user_features, book_features, rating, t):
-    return iterative_mean(user_features, book_features*rating, t+1)
+    return calc_mean(user_features, book_features*rating, t+1)
 
-
-"""Content based"""
 def content_based(user_features, books, epoch, s, UCB=False):
-    """ Return the book with the highest similarity """
     utilities = np.zeros(books.shape[0])
     for i, (title, book) in enumerate(books.iterrows()):
         book_features = get_book_features(book)
@@ -131,7 +117,6 @@ def content_based(user_features, books, epoch, s, UCB=False):
         if UCB:
             utilities[i] += compute_UCB(epoch, book.Nt)
     ans = books[books.index == books.index[utilities.argmax()]]
-    #print (x)
     while ans.index[0] in x:
         ans = books[books.index == books.index[utilities.argmax()]]
         utilities[utilities.argmax()] = -100;

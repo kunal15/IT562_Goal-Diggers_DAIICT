@@ -1,9 +1,9 @@
 # Book Recommender System based on Reinforcement Learning
 
-The recommender system is based on Multi Armed Bandit approach, in which the arms are the recommendations. The user first of all provides the Genres which he likes and as iterations pass by he gives ratings to the recommendations which mould the system on the run.
+The recommender system is based on Multi Armed Bandit approach, in which the arms are the recommendations. The user provides some of the genres which he likes and as iterations pass by, he gives ratings to the recommendations which mould the system on the run.
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and you can run it on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
